@@ -1,0 +1,23 @@
+import { channel } from "diagnostics_channel";
+
+const ch = channel("otel:diag");
+
+export function error(message: string, body?: any) {
+  ch.publish({ level: "error", message, body });
+}
+
+export function warn(message: string, body?: any) {
+  ch.publish({ level: "warn", message, body });
+}
+
+export function info(message: string, body?: any) {
+  ch.publish({ level: "info", message, body });
+}
+
+export function debug(message: string, body?: any) {
+  ch.publish({ level: "debug", message, body });
+}
+
+export function trace(message: string, body?: any) {
+  ch.publish({ level: "trace", message, body });
+}

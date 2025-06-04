@@ -1,0 +1,20 @@
+{
+  "name": "api-2",
+  "version": "1.0.0",
+  "main": "build/src/index.js",
+  "files": ["build/**/*"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "prebuild": "npm run clean",
+    "prepack": "npm run build",
+    "postpack": "npm run clean",
+    "start": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
