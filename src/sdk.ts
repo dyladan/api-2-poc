@@ -5,6 +5,8 @@ const isLogsEnabled = true; // POC: set false to disable logs
 export function startSDK() {
   // weak map to store meters and their instruments
   // if the meter is not used anymore, it will be garbage collected
+  // implementation is intentionally incomplete for POC purposes
+  // real impl would store different metric streams for each set of attributes
   const meters = new WeakMap();
 
   subscribe("otel:tracing:startSpan", (event: any) => {
@@ -23,8 +25,6 @@ export function startSDK() {
     event.enabled = true; // always enabled for POC
   });
   subscribe("otel:metrics:counter:add", (event: any) => {
-    // implementation is intentionally incomplete for POC purposes
-    // real impl would store different metric streams for each set of attributes
     console.log(
       `Counter "${event.meter.name}#${event.instrument.name}" incremented by ${event.value}`
     );
