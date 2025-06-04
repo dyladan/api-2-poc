@@ -1,5 +1,6 @@
 import { createCounter } from "./counter";
-import type { Meter, MeterOptions, InstrumentOptions } from "./types";
+import type { InstrumentOptions, Meter, MeterOptions } from "./types";
+
 
 export function createMeter(meterOptions: MeterOptions): Meter {
   return {

@@ -1,11 +1,12 @@
 import { subscribe } from "diagnostics_channel";
 
+const isLogsEnabled = true; // POC: set false to disable logs
+
 export function startSDK() {
   // weak map to store meters and their instruments
   // if the meter is not used anymore, it will be garbage collected
   const meters = new WeakMap();
 
-  subscribe("otel:diag", console.log);
   subscribe("otel:tracing:startSpan", (event: any) => {
     console.log(
       `Span "${event.tracer.name}#${event.span.name}" started with attributes:`,
@@ -46,5 +47,17 @@ export function startSDK() {
     console.log(
       `Histogram "${event.meter.name}#${event.instrument.name}" recorded value ${event.value}`
     );
+  });
+  subscribe("otel:logs:emitEvent", (event: any) => {
+    if (!isLogsEnabled) {
+      return; // skip logging if logs are disabled
+    }
+    console.log(
+      `Log event emitted by "${event.logger.name}": ${event.event.message}`,
+      event.event.attributes
+    );
+  });
+  subscribe("otel:logs:isEnabled", (event: any) => {
+    event.isEnabled = isLogsEnabled;
   });
 }

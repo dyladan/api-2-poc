@@ -24,12 +24,13 @@ export function createLogger(loggerOptions: LoggerOptions): Logger {
       });
     },
     isEnabled: () => {
-      const enabled = isEnabledChannel.hasSubscribers;
-      isEnabledChannel.publish({
+      const event = {
         logger: loggerOptions,
-        enabled,
-      });
-      return enabled;
+        // assumed enabled if there is a subscriber to the emitEvent channel
+        isEnabled: emitEventChannel.hasSubscribers,
+      };
+      isEnabledChannel.publish(event);
+      return event.isEnabled;
     },
   };
 }

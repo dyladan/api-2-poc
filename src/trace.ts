@@ -4,7 +4,6 @@ const startSpanChannel = channel(`otel:tracing:startSpan`);
 const endSpanChannel = channel(`otel:tracing:endSpan`);
 const addAttributeChannel = channel(`otel:tracing:addAttribute`);
 const setStatusChannel = channel(`otel:tracing:setStatus`);
-const isEnabledChannel = channel(`otel:tracing:isEnabled`);
 
 export function createTracer(tracerOptions: TracerOptions): Tracer {
   return {
@@ -48,16 +47,6 @@ export function createTracer(tracerOptions: TracerOptions): Tracer {
         },
       };
     },
-    isEnabled: () => {
-      // depends on the synchronous nature of diagnostics_channel
-      // subscribers should overwrite the isEnabled property
-      const isEnabled = isEnabledChannel.hasSubscribers;
-      isEnabledChannel.publish({
-        tracer: tracerOptions,
-        enabled: isEnabled,
-      });
-      return isEnabled;
-    },
   };
 }
 
@@ -75,7 +64,6 @@ export type TracerOptions = {
 };
 export type Tracer = {
   startSpan: (options: SpanOptions) => Span;
-  isEnabled: () => boolean;
 };
 
 export type SpanOptions = {

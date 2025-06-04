@@ -1,32 +1,50 @@
+import { subscribe } from "diagnostics_channel";
+subscribe("otel:diag", console.log);
+
+import { createLogger } from "./logs";
 import { createMeter } from "./metrics";
 import { createTracer } from "./trace";
 
 // Uncomment the following line to start the SDK
-// import { startSDK } from "./sdk";
-// startSDK();
+import { startSDK } from "./sdk";
+startSDK();
 
-const tracer = createTracer({
-  name: "my-tracer",
+const opts = {
   version: "1.0.0",
-  schemaUrl: "https://example.com/my-tracer-schema",
+  schemaUrl: "https://example.com/my-logger-schema",
   attributes: {
     service: "my-service",
     environment: "production",
   },
+};
+
+const logger = createLogger({
+  name: "my-logger",
+  ...opts,
+});
+
+logger.emitEvent({
+  level: "info",
+  message: "Logger initialized successfully",
+});
+
+const tracer = createTracer({
+  name: "my-tracer",
+  ...opts,
 });
 
 const meter = createMeter({
   name: "my-meter",
-  version: "1.0.0",
-  schemaUrl: "https://example.com/my-meter-schema",
-  attributes: {
-    service: "my-service",
-    environment: "production",
-  },
+  ...opts,
 });
 
-if (!tracer.isEnabled()) {
-  console.warn("Tracer is not enabled");
+logger.emitEvent({
+  level: "info",
+  message: "Tracer and meter initialized",
+});
+
+if (!logger.isEnabled()) {
+  console.warn("Logger is not enabled");
 }
 
 const span = tracer.startSpan({
@@ -68,3 +86,8 @@ requests.add(11);
 badCounter.add(13);
 
 span.end();
+
+logger.emitEvent({
+  level: "info",
+  message: "Span ended successfully",
+});
