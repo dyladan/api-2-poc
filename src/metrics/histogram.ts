@@ -24,7 +24,6 @@ export function createHistogram(
         instrument,
         meter,
         attributes,
-        timestamp: Date.now(),
       });
     },
   };

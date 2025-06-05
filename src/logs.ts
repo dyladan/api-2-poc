@@ -9,14 +9,14 @@ export type Logger = {
   isEnabled: () => boolean;
 };
 
-export function createLogger(loggerOptions: LoggerOptions): Logger {
+export function getLogger(loggerOptions: LoggerOptions): Logger {
   return {
     emitEvent(options: EmitEventOptions): void {
       const event = {
         level: options.level,
         message: options.message,
-        attributes: options.attributes || {},
-        timestamp: options.timestamp || Date.now(),
+        attributes: options.attributes,
+        timestamp: options.timestamp,
       };
       emitEventChannel.publish({
         event,

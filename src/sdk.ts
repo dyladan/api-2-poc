@@ -11,11 +11,11 @@ export function startSDK() {
 
 function startPropagationSDK() {
   subscribe("@opentelemetry/api/propagation:inject", (event: any) => {
-    event.carrier["trace-id"] = event.spanContext.traceId;
-    event.carrier["span-id"] = event.spanContext.spanId;
+    event.carrier["trace-id"] = event.options.traceId;
+    event.carrier["span-id"] = event.options.spanId;
   });
   subscribe("@opentelemetry/api/propagation:extract", (event: any) => {
-    event.spanContext = {
+    event.options = {
       traceId: event.carrier["trace-id"],
       spanId: event.carrier["span-id"],
     };
@@ -27,10 +27,7 @@ function startLogsSDK() {
     if (!isLogsEnabled) {
       return; // skip logging if logs are disabled
     }
-    console.log(
-      `Log event emitted by "${event.logger.name}": ${event.event.message}`,
-      event.event.attributes
-    );
+    console.log(`[${event.event.level}] ${event.event.message} - ${JSON.stringify(event.event.attributes)}`);
   });
   subscribe("@opentelemetry/api/logs:isEnabled", (event: any) => {
     event.isEnabled = isLogsEnabled;
@@ -73,17 +70,21 @@ function startMetricsSDK() {
 function startTracingSDK() {
   subscribe("@opentelemetry/api/trace:startSpan", (event: any) => {
     console.log(
-      `Span "${event.tracer.name}#${event.span.name}" started with attributes:`,
-      event.span.attributes
+      `Span "${event.tracer.name}#${event.options.name}" started with attributes:`,
+      event.options.attributes
     );
+    event.span = {
+      isRecording: true,
+      context: {
+        spanId: "span-id-placeholder", // placeholder for span ID
+        traceFlags: 0, // default trace flags
+        traceId: "trace-id-placeholder", // placeholder for trace ID
+      },
+      name: event.options.name || "nameless-span",
+      attributes: event.options.attributes || {},
+    };
   });
   subscribe("@opentelemetry/api/trace:endSpan", (event: any) => {
-    console.log(
-      `Span "${event.tracer.name}#${event.span.name}" ended with attributes:`,
-      event.span.attributes
-    );
-  });
-  subscribe("@opentelemetry/api/trace:isEnabled", (event: any) => {
-    event.enabled = true; // always enabled for POC
+    console.log(`Span "${event.tracer.name}#${event.span.name}" ended`);
   });
 }

@@ -26,7 +26,6 @@ export function createCounter(
         instrument,
         meter,
         attributes,
-        timestamp: Date.now(),
       });
     },
   };

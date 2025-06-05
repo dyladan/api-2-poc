@@ -1,9 +1,9 @@
 import { subscribe } from "./channels";
 subscribe("@opentelemetry/api/diag", console.log);
 
-import { createLogger } from "./logs";
-import { createMeter } from "./metrics";
-import { createTracer } from "./trace";
+import { getLogger } from "./logs";
+import { getMeter } from "./metrics";
+import { getTracer } from "./trace";
 
 // Uncomment the following line to start the SDK
 import { startSDK } from "./sdk";
@@ -18,7 +18,7 @@ const opts = {
   },
 };
 
-const logger = createLogger({
+const logger = getLogger({
   name: "my-logger",
   ...opts,
 });
@@ -28,12 +28,12 @@ logger.emitEvent({
   message: "Logger initialized successfully",
 });
 
-const tracer = createTracer({
+const tracer = getTracer({
   name: "my-tracer",
   ...opts,
 });
 
-const meter = createMeter({
+const meter = getMeter({
   name: "my-meter",
   ...opts,
 });

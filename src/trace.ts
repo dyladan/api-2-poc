@@ -11,11 +11,10 @@ const startSpanChannel = ct("startSpan"),
   setStatusChannel = ct("setStatus"),
   addEventChannel = ct("addEvent"),
   addLinkChannel = ct("addLink"),
-  spanContextChannel = ct("spanContext"),
   injectChannel = cp("inject"),
   extractChannel = cp("extract");
 
-export function createTracer(tracerOptions: TracerOptions): Tracer {
+export function getTracer(tracerOptions: TracerOptions): Tracer {
   const tracer = {
     name: tracerOptions.name,
     version: tracerOptions.version,
@@ -27,11 +26,14 @@ export function createTracer(tracerOptions: TracerOptions): Tracer {
       const startSpanEvent: { options: SpanOptions; tracer: TracerOptions; span?: StartSpanResponse } = { options, tracer };
       startSpanChannel.publish(startSpanEvent);
 
-      const span = startSpanEvent.span || { isRecording: false };
+      // span comes from SDK
+      // if no SDK is registered or it does not return a span,
+      // we create a no-op span assumed not to be recording
+      const span = startSpanEvent.span || { isRecording: false, context: { spanId: "", traceFlags: 0, traceId: "" } };
 
       return {
-        end: function (endTime: number = Date.now()): void {
-          endSpanChannel.publish({ span, tracer });
+        end: function (endTime?: number): void {
+          endSpanChannel.publish({ span, tracer, endTime });
         },
         addAttribute: function (
           key: string,
@@ -51,20 +53,8 @@ export function createTracer(tracerOptions: TracerOptions): Tracer {
         isRecording: function (): boolean {
           return span.isRecording;
         },
-        spanContext: function (): SpanContext {
-          const event: {
-            span: StartSpanResponse;
-            tracer: TracerOptions;
-            spanContext?: SpanContext;
-          } = { span, tracer };
-          spanContextChannel.publish(event);
-          return (
-            event.spanContext || {
-              spanId: "",
-              traceFlags: 0,
-              traceId: "",
-            }
-          );
+        getContext: function (): SpanContext {
+          return span.context;
         },
       };
     },
@@ -93,7 +83,7 @@ export type Span = {
   addEvent: (event: SpanEvent) => void;
   addLink: (link: Link) => void;
   isRecording: () => boolean;
-  spanContext: () => SpanContext;
+  getContext: () => SpanContext;
 };
 
 export type SpanEvent = {
@@ -203,4 +193,5 @@ export type TraceState = {
 
 export type StartSpanResponse = {
   isRecording: boolean;
+  context: SpanContext;
 }
