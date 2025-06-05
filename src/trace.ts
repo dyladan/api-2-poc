@@ -1,9 +1,9 @@
-import { channel } from "diagnostics_channel";
+import { channel } from "./channels";
 
-const startSpanChannel = channel(`otel:tracing:startSpan`);
-const endSpanChannel = channel(`otel:tracing:endSpan`);
-const addAttributeChannel = channel(`otel:tracing:addAttribute`);
-const setStatusChannel = channel(`otel:tracing:setStatus`);
+const startSpanChannel = channel(`@opentelemetry/api/trace:startSpan`);
+const endSpanChannel = channel(`@opentelemetry/api/trace:endSpan`);
+const addAttributeChannel = channel(`@opentelemetry/api/trace:addAttribute`);
+const setStatusChannel = channel(`@opentelemetry/api/trace:setStatus`);
 
 export function createTracer(tracerOptions: TracerOptions): Tracer {
   return {

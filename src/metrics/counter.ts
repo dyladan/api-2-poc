@@ -1,9 +1,9 @@
-import { channel } from "diagnostics_channel";
+import { channel } from "../channels";
 import type { Attributes } from "../types";
 import { createInstrument } from "./instrument";
 import type { Counter, InstrumentOptions, MeterOptions } from "./types";
 
-const ch = channel(`otel:metrics:counter:add`);
+const ch = channel(`@opentelemetry/api/metrics:counter:add`);
 
 export function createCounter(
   meter: MeterOptions,

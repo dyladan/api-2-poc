@@ -1,5 +1,5 @@
-import { subscribe } from "diagnostics_channel";
-subscribe("otel:diag", console.log);
+import { subscribe } from "./channels";
+subscribe("@opentelemetry/api/diag", console.log);
 
 import { createLogger } from "./logs";
 import { createMeter } from "./metrics";

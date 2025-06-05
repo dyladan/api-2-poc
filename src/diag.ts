@@ -1,6 +1,6 @@
-import { channel } from "diagnostics_channel";
+import { channel } from "./channels";
 
-const ch = channel("otel:diag");
+const ch = channel("@opentelemetry/api/diag");
 
 export function error(message: string, body?: any) {
   ch.publish({ level: "error", message, body });
