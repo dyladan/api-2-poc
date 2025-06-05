@@ -57,13 +57,6 @@ class Channel {
     this.name = name;
   }
 
-  static [Symbol.hasInstance](instance: any) {
-    const prototype = Object.getPrototypeOf(instance);
-    return (
-      prototype === Channel.prototype || prototype === ActiveChannel.prototype
-    );
-  }
-
   subscribe(subscription: ChannelListener) {
     Object.setPrototypeOf(this, ActiveChannel.prototype);
     this._subscribers = [];
@@ -84,11 +77,10 @@ class Channel {
 // channels must be stored in a global symbol to allow multiple instances
 // of the API to coexist without conflicts.
 const channelsSymbol = Symbol.for("@opentelemetry/api:channels");
+(globalThis as any)[channelsSymbol] = (globalThis as any)[channelsSymbol] || {};
 const channels: Record<string | symbol, WeakRef<Channel>> = (globalThis as any)[
   channelsSymbol
-] ||
-(globalThis as any)[channelsSymbol] ||
-{};
+];
 
 export function channel(name: string | symbol): Channel {
   const channel = channels[name];
