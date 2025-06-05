@@ -11,19 +11,15 @@ export type Logger = {
 
 export function getLogger(loggerOptions: LoggerOptions): Logger {
   return {
-    emitEvent(options: EmitEventOptions): void {
-      const event = {
-        level: options.level,
-        message: options.message,
-        attributes: options.attributes,
-        timestamp: options.timestamp,
-      };
+    emitEvent(event: EmitEventOptions): void { 
+      if (!emitEventChannel.hasSubscribers) return;
       emitEventChannel.publish({
-        event,
+        event: event,
         logger: loggerOptions,
       });
     },
     isEnabled: () => {
+      if (!isEnabledChannel.hasSubscribers) return emitEventChannel.hasSubscribers;
       const event = {
         logger: loggerOptions,
         // assumed enabled if there is a subscriber to the emitEvent channel

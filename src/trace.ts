@@ -14,6 +14,10 @@ const startSpanChannel = ct("startSpan"),
   injectChannel = cp("inject"),
   extractChannel = cp("extract");
 
+const nopSpan = {
+  isRecording: false,
+  context: { spanId: "", traceFlags: 0, traceId: "" },
+};
 export function getTracer(tracerOptions: TracerOptions): Tracer {
   const tracer = {
     name: tracerOptions.name,
@@ -23,31 +27,40 @@ export function getTracer(tracerOptions: TracerOptions): Tracer {
   };
   return {
     startSpan(options: SpanOptions): Span {
-      const startSpanEvent: { options: SpanOptions; tracer: TracerOptions; span?: StartSpanResponse } = { options, tracer };
+      const startSpanEvent: {
+        options: SpanOptions;
+        tracer: TracerOptions;
+        span?: StartSpanResponse;
+      } = { options, tracer };
       startSpanChannel.publish(startSpanEvent);
 
       // span comes from SDK
       // if no SDK is registered or it does not return a span,
-      // we create a no-op span assumed not to be recording
-      const span = startSpanEvent.span || { isRecording: false, context: { spanId: "", traceFlags: 0, traceId: "" } };
+      // we use a no-op span assumed not to be recording
+      const span = startSpanEvent.span || nopSpan;
 
       return {
         end: function (endTime?: number): void {
+          if (!endSpanChannel.hasSubscribers) return;
           endSpanChannel.publish({ span, tracer, endTime });
         },
         addAttribute: function (
           key: string,
           value: string | number | boolean
         ): void {
+          if (!addAttributeChannel.hasSubscribers) return;
           addAttributeChannel.publish({ span, tracer, key, value });
         },
         setStatus: function (status: SpanStatus): void {
+          if (!setStatusChannel.hasSubscribers) return;
           setStatusChannel.publish({ span, tracer, status });
         },
         addEvent: function (event: SpanEvent): void {
+          if (!addEventChannel.hasSubscribers) return;
           addEventChannel.publish({ span, tracer, event });
         },
         addLink: function (link: Link): void {
+          if (!addLinkChannel.hasSubscribers) return;
           addLinkChannel.publish({ span, tracer, link });
         },
         isRecording: function (): boolean {
@@ -65,13 +78,19 @@ export function inject(
   spanContext: SpanContext,
   carrier: TextMapCarrier
 ): void {
-  injectChannel.publish({ spanContext, carrier });
+  if (injectChannel.hasSubscribers) {
+    injectChannel.publish({ spanContext, carrier });
+  }
 }
 
+const emptyCarrier = {};
 export function extract(carrier: TextMapCarrier): Partial<SpanContext> {
-  const spanContext: Partial<SpanContext> = {};
-  extractChannel.publish({ carrier, spanContext });
-  return spanContext;
+  if (extractChannel.hasSubscribers) {
+    const spanContext: Partial<SpanContext> = {};
+    extractChannel.publish({ carrier, spanContext });
+    return spanContext;
+  }
+  return emptyCarrier;
 }
 
 export type TextMapCarrier = Record<string, string>;
@@ -194,4 +213,4 @@ export type TraceState = {
 export type StartSpanResponse = {
   isRecording: boolean;
   context: SpanContext;
-}
+};
