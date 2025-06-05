@@ -7,10 +7,8 @@ export function inject(
   spanContext: SpanContext,
   carrier: TextMapCarrier
 ): void {
-  const { traceId, spanId } = spanContext;
   injectChannel.publish({
-    spanId,
-    traceId,
+    spanContext,
     carrier,
   });
 }
@@ -20,14 +18,14 @@ export function extract(
 ): SpanContext | null | undefined {
   const event: {
     carrier: TextMapCarrier;
-    spanContext?: SpanContext | null;
-  } = { carrier };
+    spanContext: SpanContext;
+  } = { carrier, spanContext: {} };
   extractChannel.publish(event);
   return event.spanContext;
 }
 
 type SpanContext = {
-  traceId: string;
-  spanId: string;
+  traceId?: string;
+  spanId?: string;
 };
 type TextMapCarrier = Record<string, string>;
