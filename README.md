@@ -50,4 +50,6 @@ This comes at the cost of additional complexity in the implementation.
 ## Possible interop ideas
 
 1. A dummy SDK registered with the old API which calls the new API.
-2. SDK simply listens to both APIs. `ContextManager` MUST be shared between both APIs for context to behave correctly.
+   Likely the SDK will have to register this dummy SDK itself with the old API.
+2. SDK listens to both APIs. `ContextManager` MUST be shared between both APIs for context to behave correctly.
+   This complicates the SDK but means users don't have to think about it at all.
