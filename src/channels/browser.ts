@@ -6,28 +6,7 @@ class ActiveChannel {
   name: any;
 
   subscribe(subscription: ChannelListener) {
-    if (typeof subscription !== "function") {
-      throw new Error(
-        'The "subscription" argument must be of type function',
-        subscription
-      );
-    }
     this._subscribers.push(subscription);
-  }
-
-  unsubscribe(subscription: ChannelListener) {
-    const index = this._subscribers.indexOf(subscription);
-    if (index === -1) return false;
-
-    this._subscribers.splice(index, 1);
-
-    // When there are no more active subscribers, restore to fast prototype.
-    if (!this._subscribers.length) {
-      // eslint-disable-next-line no-use-before-define
-      Object.setPrototypeOf(this, Channel.prototype);
-    }
-
-    return true;
   }
 
   get hasSubscribers() {
@@ -36,14 +15,8 @@ class ActiveChannel {
 
   publish(data: any) {
     for (let i = 0; i < this._subscribers.length; i++) {
-      try {
-        const onMessage = this._subscribers[i];
-        onMessage(data, this.name);
-      } catch (err) {
-        process.nextTick(() => {
-          throw err;
-        });
-      }
+      const onMessage = this._subscribers[i];
+      onMessage(data, this.name);
     }
   }
 }
@@ -59,12 +32,7 @@ class Channel {
 
   subscribe(subscription: ChannelListener) {
     Object.setPrototypeOf(this, ActiveChannel.prototype);
-    this._subscribers = [];
-    this.subscribe(subscription);
-  }
-
-  unsubscribe() {
-    return false;
+    this._subscribers = [subscription];
   }
 
   get hasSubscribers() {
