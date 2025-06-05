@@ -1,17 +1,19 @@
 import { channel } from "./channels";
 import type { Attributes, AttributeValue } from "./types";
 
-const startSpanChannel = channel(`@opentelemetry/api/trace:startSpan`);
-const endSpanChannel = channel(`@opentelemetry/api/trace:endSpan`);
-const addAttributeChannel = channel(`@opentelemetry/api/trace:addAttribute`);
-const setStatusChannel = channel(`@opentelemetry/api/trace:setStatus`);
-const addEventChannel = channel(`@opentelemetry/api/trace:addEvent`);
-const addLinkChannel = channel(`@opentelemetry/api/trace:addLink`);
-const isRecordingChannel = channel(`@opentelemetry/api/trace:isRecording`);
-const spanContextChannel = channel(`@opentelemetry/api/trace:spanContext`);
-
-const injectChannel = channel("@opentelemetry/api/propagation:inject");
-const extractChannel = channel("@opentelemetry/api/propagation:extract");
+// example showing code size reduction opportunities
+const p = "@opentelemetry/api/";
+const ct = (m: string) => channel(`${p}trace:${m}`);
+const cp = (m: string) => channel(`${p}propagation:${m}`);
+const startSpanChannel = ct("startSpan"),
+  endSpanChannel = ct("endSpan"),
+  addAttributeChannel = ct("addAttribute"),
+  setStatusChannel = ct("setStatus"),
+  addEventChannel = ct("addEvent"),
+  addLinkChannel = ct("addLink"),
+  spanContextChannel = ct("spanContext"),
+  injectChannel = cp("inject"),
+  extractChannel = cp("extract");
 
 export function createTracer(tracerOptions: TracerOptions): Tracer {
   const tracer = {
@@ -22,17 +24,13 @@ export function createTracer(tracerOptions: TracerOptions): Tracer {
   };
   return {
     startSpan(options: SpanOptions): Span {
-      const span: SpanOptions = {
-        name: options.name,
-        attributes: options.attributes || {},
-        startTime: options.startTime || Date.now(),
-      };
+      const startSpanEvent: { options: SpanOptions; tracer: TracerOptions; span?: StartSpanResponse } = { options, tracer };
+      startSpanChannel.publish(startSpanEvent);
 
-      startSpanChannel.publish({ span, tracer });
+      const span = startSpanEvent.span || { isRecording: false };
 
       return {
         end: function (endTime: number = Date.now()): void {
-          span.endTime = endTime;
           endSpanChannel.publish({ span, tracer });
         },
         addAttribute: function (
@@ -51,14 +49,11 @@ export function createTracer(tracerOptions: TracerOptions): Tracer {
           addLinkChannel.publish({ span, tracer, link });
         },
         isRecording: function (): boolean {
-          // TODO should the default be false?
-          const event = { span, tracer, isRecording: true };
-          isRecordingChannel.publish(event);
-          return event.isRecording;
+          return span.isRecording;
         },
         spanContext: function (): SpanContext {
           const event: {
-            span: SpanOptions;
+            span: StartSpanResponse;
             tracer: TracerOptions;
             spanContext?: SpanContext;
           } = { span, tracer };
@@ -205,3 +200,7 @@ export type TraceState = {
   set(key: string, value: string): TraceState;
   unset(key: string): TraceState;
 };
+
+export type StartSpanResponse = {
+  isRecording: boolean;
+}
