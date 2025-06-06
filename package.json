@@ -2,7 +2,12 @@
   "name": "api-2",
   "version": "1.0.0",
   "main": "build/src/index.js",
-  "files": ["build/**/*"],
+  "files": [
+    "build/**/*.js",
+    "build/**/*.js.map",
+    "build/**/*.d.ts",
+    "build/**/*.d.ts.map"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf build",

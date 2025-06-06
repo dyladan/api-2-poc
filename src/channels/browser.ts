@@ -2,8 +2,8 @@
 // It provides a way to create channels and subscribe to them
 
 class ActiveChannel {
-  _subscribers: any;
-  name: any;
+  _subscribers!: ChannelListener[];
+  name!: string;
 
   subscribe(subscription: ChannelListener) {
     this._subscribers.push(subscription);
@@ -15,17 +15,16 @@ class ActiveChannel {
 
   publish(data: any) {
     for (let i = 0; i < this._subscribers.length; i++) {
-      const onMessage = this._subscribers[i];
-      onMessage(data, this.name);
+      this._subscribers[i](data, this.name);
     }
   }
 }
 
 class Channel {
-  _subscribers: any;
-  name: any;
+  _subscribers?: ChannelListener[];
+  name: string;
 
-  constructor(name: string | symbol) {
+  constructor(name: string) {
     this._subscribers = undefined;
     this.name = name;
   }
@@ -46,32 +45,13 @@ class Channel {
 // of the API to coexist without conflicts.
 const channelsSymbol = Symbol.for("@opentelemetry/api:channels");
 (globalThis as any)[channelsSymbol] = (globalThis as any)[channelsSymbol] || {};
-const channels: Record<string | symbol, WeakRef<Channel>> = (globalThis as any)[
+const channels: Record<string | symbol, Channel> = (globalThis as any)[
   channelsSymbol
 ];
 
 export function channel(name: string | symbol): Channel {
-  const channel = channels[name];
-  if (channel) {
-    const channelInstance = channel.deref();
-    if (channelInstance) {
-      return channelInstance;
-    } else {
-      // If the channel was garbage collected, remove it from the map
-      delete channels[name];
-    }
-  }
-
-  if (typeof name !== "string" && typeof name !== "symbol") {
-    throw new Error(
-      'The "channel" argument must be one of type string or symbol',
-      name
-    );
-  }
-
-  const ch = new Channel(name);
-  channels[name] = new WeakRef(ch);
-  return ch;
+  channels[name] = channels[name] || new Channel(name);
+  return channels[name];
 }
 
 export type ChannelListener = (message: unknown, name: string | symbol) => void;
