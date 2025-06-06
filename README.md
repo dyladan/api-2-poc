@@ -46,6 +46,10 @@ This comes at the cost of additional complexity in the implementation.
 2. What's the best way to bridge the old API implementation?
    We can't assume every package and instrumentation in an application will be updated the new API.
    I think we need at least some period of at least 6-12 months where the SDK supports both _interchangeably_ and _interoperably_.
+3. How deep do we want to go on interop?
+   At least we want to make sure that if the end-user depends on a library which isn't yet updated, they can successfully use the new API.
+   Do we also want to go the other direction?
+   If they depend on a package that uses the new API but they're still using the old API for init, is it ok to drop that telemetry until the user updates their "main" API version?
 
 ## Possible interop ideas
 
@@ -53,3 +57,5 @@ This comes at the cost of additional complexity in the implementation.
    Likely the SDK will have to register this dummy SDK itself with the old API.
 2. SDK listens to both APIs. `ContextManager` MUST be shared between both APIs for context to behave correctly.
    This complicates the SDK but means users don't have to think about it at all.
+3. Old API no-op implementation actually calls the new API instead of true no-op.
+   This would require a minimum version of the 1.x API to be used, but seems to me to be the simplest option.
