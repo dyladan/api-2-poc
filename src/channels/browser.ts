@@ -45,19 +45,19 @@ class Channel {
 // of the API to coexist without conflicts.
 const channelsSymbol = Symbol.for("@opentelemetry/api:channels");
 (globalThis as any)[channelsSymbol] = (globalThis as any)[channelsSymbol] || {};
-const channels: Record<string | symbol, Channel> = (globalThis as any)[
+const channels: Record<string, Channel> = (globalThis as any)[
   channelsSymbol
 ];
 
-export function channel(name: string | symbol): Channel {
+export function channel(name: string): Channel {
   channels[name] = channels[name] || new Channel(name);
   return channels[name];
 }
 
-export type ChannelListener = (message: unknown, name: string | symbol) => void;
+export type ChannelListener = (message: unknown, name: string) => void;
 
 export function subscribe(
-  name: string | symbol,
+  name: string,
   onMessage: ChannelListener
 ): void {
   channel(name).subscribe(onMessage);
