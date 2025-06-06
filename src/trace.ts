@@ -1,18 +1,14 @@
 import { channel } from "./channels";
 import type { Attributes, AttributeValue } from "./types";
 
-// example showing code size reduction opportunities
-const p = "@opentelemetry/api/";
-const ct = (m: string) => channel(`${p}trace:${m}`);
-const cp = (m: string) => channel(`${p}propagation:${m}`);
-const startSpanChannel = ct("startSpan"),
-  endSpanChannel = ct("endSpan"),
-  addAttributeChannel = ct("addAttribute"),
-  setStatusChannel = ct("setStatus"),
-  addEventChannel = ct("addEvent"),
-  addLinkChannel = ct("addLink"),
-  injectChannel = cp("inject"),
-  extractChannel = cp("extract");
+const startSpanChannel = channel("@opentelemetry/api/trace:startSpan"),
+  endSpanChannel = channel("@opentelemetry/api/trace:endSpan"),
+  addAttributeChannel = channel("@opentelemetry/api/trace:addAttribute"),
+  setStatusChannel = channel("@opentelemetry/api/trace:setStatus"),
+  addEventChannel = channel("@opentelemetry/api/trace:addEvent"),
+  addLinkChannel = channel("@opentelemetry/api/trace:addLink"),
+  injectChannel = channel("@opentelemetry/api/propagation:inject"),
+  extractChannel = channel("@opentelemetry/api/propagation:extract");
 
 const nopSpan = {
   isRecording: false,
