@@ -83,14 +83,12 @@ export function inject(
   }
 }
 
-const emptyCarrier = {};
 export function extract(carrier: TextMapCarrier): Partial<SpanContext> {
+  const spanContext: Partial<SpanContext> = {};
   if (extractChannel.hasSubscribers) {
-    const spanContext: Partial<SpanContext> = {};
     extractChannel.publish({ carrier, spanContext });
-    return spanContext;
   }
-  return emptyCarrier;
+  return spanContext;
 }
 
 export type TextMapCarrier = Record<string, string>;
