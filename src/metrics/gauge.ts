@@ -1,24 +1,18 @@
 import { channel } from "../channels";
 import type { Attributes } from "../types";
 import { createInstrument } from "./instrument";
-import type {
-  Counter,
-  GaugeRecordEvent,
-  InstrumentOptions,
-  MeterOptions,
-} from "./types";
+import type { Gauge, GaugeRecordEvent, InstrumentOptions, MeterOptions } from "./types";
 
-const ch = channel(`@opentelemetry/api/metrics:counter:add`);
+const ch = channel("@opentelemetry/api/metrics:gauge:record");
 
-export function createCounter(
+export function createGauge(
   meter: MeterOptions,
   options: InstrumentOptions
-): Counter {
-  const instrument = createInstrument("counter", meter, options);
-
+): Gauge {
+  const instrument = createInstrument("gauge", meter, options);
   if (!instrument) {
     return {
-      add: () => {
+      record: () => {
         // No-op if instrument creation failed
       },
     };
@@ -33,7 +27,7 @@ export function createCounter(
   };
 
   return {
-    add(value: number, attributes?: Attributes) {
+    record(value: number, attributes?: Attributes) {
       event.value = value;
       event.attributes = attributes;
       ch.publish(event);

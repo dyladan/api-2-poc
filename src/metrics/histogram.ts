@@ -1,7 +1,12 @@
 import { channel } from "../channels";
 import type { Attributes } from "../types";
 import { createInstrument } from "./instrument";
-import type { Histogram, InstrumentOptions, MeterOptions } from "./types";
+import type {
+  Histogram,
+  HistogramRecordEvent,
+  InstrumentOptions,
+  MeterOptions,
+} from "./types";
 
 const ch = channel("@opentelemetry/api/metrics:histogram:record");
 
@@ -17,14 +22,20 @@ export function createHistogram(
       },
     };
   }
+
+  // re-use event object to avoid allocation
+  // also allows SDK to optimize lookups with weakmap
+  const event: HistogramRecordEvent = {
+    value: 0,
+    instrument,
+    meter,
+  };
+
   return {
-    record(value: number, attributes: Attributes = {}) {
-      ch.publish({
-        value,
-        instrument,
-        meter,
-        attributes,
-      });
+    record(value: number, attributes?: Attributes) {
+      event.value = value;
+      event.attributes = attributes;
+      ch.publish(event);
     },
   };
 }

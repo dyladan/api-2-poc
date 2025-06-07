@@ -1,11 +1,11 @@
 import { error } from "../diag";
-import { InstrumentOptions, MeterOptions } from "./types";
+import { InstrumentDescriptor, InstrumentOptions, MeterOptions } from "./types";
 
 export function createInstrument<T extends string>(
   type: T,
   meter: MeterOptions,
   options: InstrumentOptions
-) {
+): InstrumentDescriptor | undefined {
   if (!options.name) {
     error(`Instrument name is required`, {
       type,
