@@ -43,11 +43,14 @@
     "prebuild": "npm run clean",
     "prepack": "npm run build",
     "check": "tsc --noEmit",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node main.ts",
+    "bundle": "webpack --config webpack.config.js"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
   }
 }
