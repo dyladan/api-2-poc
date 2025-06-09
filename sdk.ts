@@ -1,4 +1,4 @@
-import { subscribe } from "diagnostics_channel";
+import { subscribe } from "./src/channels";
 
 const isLogsEnabled = true; // POC: set false to disable logs
 

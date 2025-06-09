@@ -2,11 +2,40 @@
   "name": "api-2",
   "version": "1.0.0",
   "main": "build/src/index.js",
+  "browser": {
+    "./build/src/channels/index.js": "./build/src/channels/browser.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./build/src/index.js",
+      "require": "./build/src/index.js"
+    },
+    "./channels": {
+      "import": "./build/src/channels/index.js",
+      "require": "./build/src/channels/index.js"
+    },
+    "./trace": {
+      "import": "./build/src/trace.js",
+      "require": "./build/src/trace.js"
+    },
+    "./metrics": {
+      "import": "./build/src/metrics/index.js",
+      "require": "./build/src/metrics/index.js"
+    },
+    "./logs": {
+      "import": "./build/src/logs.js",
+      "require": "./build/src/logs.js"
+    },
+    "./diag": {
+      "import": "./build/src/diag.js",
+      "require": "./build/src/diag.js"
+    }
+  },
   "files": [
-    "build/**/*.js",
-    "build/**/*.js.map",
-    "build/**/*.d.ts",
-    "build/**/*.d.ts.map"
+    "build/src/**/*.js",
+    "build/src/**/*.js.map",
+    "build/src/**/*.d.ts",
+    "build/src/**/*.d.ts.map"
   ],
   "scripts": {
     "build": "tsc",
