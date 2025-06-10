@@ -22,18 +22,14 @@ export type {
 } from "./types";
 
 export function getMeter(meterOptions: MeterOptions): Meter {
+  const memoizeMetricFn =
+    <T, K>(metricFn: (meterOptions: MeterOptions, metricOptions: T) => K) =>
+    (metricOptions: T): K =>
+      metricFn(meterOptions, metricOptions);
   return {
-    createHistogram(options: InstrumentOptions) {
-      return createHistogram(meterOptions, options);
-    },
-    createCounter(options: InstrumentOptions) {
-      return createCounter(meterOptions, options);
-    },
-    createGauge(options: InstrumentOptions) {
-      return createGauge(meterOptions, options);
-    },
-    createObservableCounter(options: InstrumentOptions) {
-      return createObservableCounter(meterOptions, options);
-    },
+    createHistogram: memoizeMetricFn(createHistogram),
+    createCounter: memoizeMetricFn(createCounter),
+    createGauge: memoizeMetricFn(createGauge),
+    createObservableCounter: memoizeMetricFn(createObservableCounter),
   };
 }

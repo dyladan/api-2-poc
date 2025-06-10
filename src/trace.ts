@@ -1,14 +1,16 @@
 import { channel } from "./channels";
 import type { Attributes, AttributeValue } from "./types";
 
-const startSpanChannel = channel("@opentelemetry/api/trace:startSpan"),
-  endSpanChannel = channel("@opentelemetry/api/trace:endSpan"),
-  addAttributeChannel = channel("@opentelemetry/api/trace:addAttribute"),
-  setStatusChannel = channel("@opentelemetry/api/trace:setStatus"),
-  addEventChannel = channel("@opentelemetry/api/trace:addEvent"),
-  addLinkChannel = channel("@opentelemetry/api/trace:addLink"),
-  injectChannel = channel("@opentelemetry/api/propagation:inject"),
-  extractChannel = channel("@opentelemetry/api/propagation:extract");
+const tracePrefix = "@opentelemetry/api/trace:";
+const propagationPrefix = "@opentelemetry/api/propagation:";
+const startSpanChannel = channel(`${tracePrefix}startSpan`),
+  endSpanChannel = channel(`${tracePrefix}endSpan`),
+  addAttributeChannel = channel(`${tracePrefix}addAttribute`),
+  setStatusChannel = channel(`${tracePrefix}setStatus`),
+  addEventChannel = channel(`${tracePrefix}addEvent`),
+  addLinkChannel = channel(`${tracePrefix}addLink`),
+  injectChannel = channel(`${propagationPrefix}inject`),
+  extractChannel = channel(`${propagationPrefix}extract`);
 
 const nopSpan = {
   isRecording: false,
@@ -35,29 +37,38 @@ export function getTracer(tracerOptions: TracerOptions): Tracer {
       // we use a no-op span assumed not to be recording
       const span = startSpanEvent.span || nopSpan;
 
+      // Reuse a single event object for all events to avoid allocation
+      const eventObj: any = { span, tracer };
+
       return {
         end: function (endTime?: number): void {
           if (!endSpanChannel.hasSubscribers) return;
-          endSpanChannel.publish({ span, tracer, endTime });
+          eventObj.endTime = endTime;
+          endSpanChannel.publish(eventObj);
         },
         addAttribute: function (
           key: string,
-          value: string | number | boolean
+          value: AttributeValue
         ): void {
           if (!addAttributeChannel.hasSubscribers) return;
-          addAttributeChannel.publish({ span, tracer, key, value });
+          eventObj.key = key;
+          eventObj.value = value;
+          addAttributeChannel.publish(eventObj);
         },
         setStatus: function (status: SpanStatus): void {
           if (!setStatusChannel.hasSubscribers) return;
-          setStatusChannel.publish({ span, tracer, status });
+          eventObj.status = status;
+          setStatusChannel.publish(eventObj);
         },
         addEvent: function (event: SpanEvent): void {
           if (!addEventChannel.hasSubscribers) return;
-          addEventChannel.publish({ span, tracer, event });
+          eventObj.event = event;
+          addEventChannel.publish(eventObj);
         },
         addLink: function (link: Link): void {
           if (!addLinkChannel.hasSubscribers) return;
-          addLinkChannel.publish({ span, tracer, link });
+          eventObj.link = link;
+          addLinkChannel.publish(eventObj);
         },
         isRecording: function (): boolean {
           return span.isRecording;
