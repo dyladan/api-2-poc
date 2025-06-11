@@ -41,10 +41,10 @@ This comes at the cost of additional complexity in the implementation.
 
 ### Minification
 
-Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `17.86KiB` (`75.4%`).
+Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `17.87KiB` (`75.4%`).
 
 ```
-asset main.js 5.84 KiB [emitted] [minimized] (name: main)
+asset main.js 5.83 KiB [compared for emit] [minimized] (name: main)
 modules by path ./build/src/metrics/*.js 5.03 KiB
   ./build/src/metrics/index.js 768 bytes [built] [code generated]
   ./build/src/metrics/counter.js 948 bytes [built] [code generated]
@@ -52,14 +52,14 @@ modules by path ./build/src/metrics/*.js 5.03 KiB
   ./build/src/metrics/histogram.js 969 bytes [built] [code generated]
   ./build/src/metrics/observable_counter.js 864 bytes [built] [code generated]
   ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
-modules by path ./build/src/*.js 9.45 KiB
-  ./build/src/index.js 1.07 KiB [built] [code generated]
+modules by path ./build/src/*.js 9.41 KiB
+  ./build/src/index.js 1.03 KiB [built] [code generated]
   ./build/src/context.js 1.17 KiB [built] [code generated]
   ./build/src/diag.js 805 bytes [built] [code generated]
   ./build/src/logs.js 1.03 KiB [built] [code generated]
   ./build/src/trace.js 5.4 KiB [built] [code generated]
 ./build/src/channels/browser.js 1.44 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 183 ms
+webpack 5.99.9 compiled successfully in 164 ms
 ```
 
 **Old API Webpack**
