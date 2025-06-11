@@ -28,9 +28,8 @@ logger.emitEvent({
   message: "Logger initialized successfully",
 });
 
-const tracer = getTracer({
-  name: "my-tracer",
-  ...opts,
+const tracer = getTracer("my-tracer", "1.0.0", {
+  schemaUrl: "https://example.com/my-tracer-schema",
 });
 
 const meter = getMeter({
@@ -47,8 +46,7 @@ if (!logger.isEnabled()) {
   console.warn("Logger is not enabled");
 }
 
-const span = tracer.startSpan({
-  name: "my-span",
+const span = tracer.startSpan("my-span", {
   attributes: {
     operation: "test-operation",
   },

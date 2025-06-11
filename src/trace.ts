@@ -1,80 +1,91 @@
 import { channel } from "./channels";
-import type { Attributes, AttributeValue } from "./types";
+import { Context } from "./context";
+import type { Attributes, AttributeValue, TimeInput } from "./types";
 
 const packageNamePrefix = "@opentelemetry/api/";
-const tracePrefix = `${packageNamePrefix}trace:`;
 const propagationPrefix = `${packageNamePrefix}propagation:`;
-const startSpanChannel = channel(`${tracePrefix}startSpan`),
-  endSpanChannel = channel(`${tracePrefix}endSpan`),
-  addAttributeChannel = channel(`${tracePrefix}addAttribute`),
-  setStatusChannel = channel(`${tracePrefix}setStatus`),
-  addEventChannel = channel(`${tracePrefix}addEvent`),
-  addLinkChannel = channel(`${tracePrefix}addLink`),
-  injectChannel = channel(`${propagationPrefix}inject`),
+const injectChannel = channel(`${propagationPrefix}inject`),
   extractChannel = channel(`${propagationPrefix}extract`);
 
-const nopSpan = {
-  isRecording: false,
-  context: { spanId: "", traceFlags: 0, traceId: "" },
+const noopTracerProvider = {
+  getTracer() {
+    function startSpan() {
+      // This is a no-op tracer, so we return a no-op span
+      function nop() {}
+      const spanId = "0000000000000000";
+      return {
+        end: nop,
+        addAttribute: nop,
+        setStatus: nop,
+        addEvent: nop,
+        addLink: nop,
+        isRecording: () => false,
+        getContext: () => ({
+          spanId,
+          traceId: spanId + spanId,
+          traceFlags: 0,
+        }),
+      };
+    }
+    return {
+      startSpan,
+      startActiveSpan: function <F extends (span: Span) => ReturnType<F>>(
+        name: string,
+        fn: F
+      ): ReturnType<F> {
+        return fn(startSpan());
+      },
+    };
+  },
 };
-export function getTracer(tracerOptions: TracerOptions): Tracer {
-  const tracer = {
-    name: tracerOptions.name,
-    version: tracerOptions.version,
-    schemaUrl: tracerOptions.schemaUrl,
-    attributes: tracerOptions.attributes || {},
-  };
-  return {
-    startSpan(options: SpanOptions): Span {
-      const startSpanEvent: {
-        options: SpanOptions;
-        tracer: TracerOptions;
-        span?: StartSpanResponse;
-      } = { options, tracer };
-      startSpanChannel.publish(startSpanEvent);
 
+export function registerGlobalTracerProvider(
+  tracerProvider: TracerProvider
+): void {
+  // Register the tracer provider globally
+  (globalThis as any).OTEL_TRACER_PROVIDER = tracerProvider;
+}
+
+export function getTracer(
+  name: string,
+  version?: string,
+  options?: TracerOptions
+): Tracer {
+  const tracer = (
+    (globalThis as any).OTEL_TRACER_PROVIDER || noopTracerProvider
+  ).getTracer(name, version, options);
+  return {
+    startSpan(name, options, context): Span {
       // span comes from SDK
       // if no SDK is registered or it does not return a span,
       // we use a no-op span assumed not to be recording
-      const span = startSpanEvent.span || nopSpan;
-
-      // Reuse a single event object for all events to avoid allocation
-      const eventObj: any = { span, tracer };
+      const span = tracer.startSpan(name, options, context);
 
       return {
         end(endTime?: number): void {
-          if (!endSpanChannel.hasSubscribers) return;
-          eventObj.endTime = endTime;
-          endSpanChannel.publish(eventObj);
+          span.end(endTime);
         },
         addAttribute(key: string, value: AttributeValue): void {
-          if (!addAttributeChannel.hasSubscribers) return;
-          eventObj.key = key;
-          eventObj.value = value;
-          addAttributeChannel.publish(eventObj);
+          span.addAttribute(key, value);
         },
         setStatus(status: SpanStatus): void {
-          if (!setStatusChannel.hasSubscribers) return;
-          eventObj.status = status;
-          setStatusChannel.publish(eventObj);
+          span.setStatus(status);
         },
         addEvent(event: SpanEvent): void {
-          if (!addEventChannel.hasSubscribers) return;
-          eventObj.event = event;
-          addEventChannel.publish(eventObj);
+          span.addEvent(event);
         },
         addLink(link: Link): void {
-          if (!addLinkChannel.hasSubscribers) return;
-          eventObj.link = link;
-          addLinkChannel.publish(eventObj);
+          span.addLink(link);
         },
-        isRecording(): boolean {
-          return span.isRecording;
-        },
-        getContext(): SpanContext {
-          return span.context;
-        },
+        isRecording: () => span.isRecording(),
+        getContext: () => span.getContext(),
       };
+    },
+    startActiveSpan: function <F extends (span: Span) => unknown>(
+      name: string,
+      fn: F
+    ): ReturnType<F> {
+      throw new Error("Function not implemented.");
     },
   };
 }
@@ -137,25 +148,124 @@ export const enum SpanStatusCode {
   ERROR = 2,
 }
 
-export type TracerOptions = {
-  name: string;
-  version?: string;
+/**
+ * An interface describes additional metadata of a tracer.
+ *
+ * @since 1.3.0
+ */
+export interface TracerOptions {
+  /**
+   * The schemaUrl of the tracer or instrumentation library
+   */
   schemaUrl?: string;
-  attributes?: Record<string, string | number | boolean>;
-};
-export type Tracer = {
-  startSpan: (options: SpanOptions) => Span;
-};
+}
+/**
+ * Tracer provides an interface for creating {@link Span}s.
+ *
+ * @since 1.0.0
+ */
+export interface Tracer {
+  /**
+   * Starts a new {@link Span}. Start the span without setting it on context.
+   *
+   * This method do NOT modify the current Context.
+   *
+   * @param name The name of the span
+   * @param [options] SpanOptions used for span creation
+   * @param [context] Context to use to extract parent
+   * @returns Span The newly created span
+   * @example
+   *     const span = tracer.startSpan('op');
+   *     span.setAttribute('key', 'value');
+   *     span.end();
+   */
+  startSpan(name: string, options?: SpanOptions, context?: Context): Span;
 
-export type SpanOptions = {
-  name: string;
-  attributes?: Record<string, string | number | boolean>;
-  startTime?: number;
-  endTime?: number;
+  /**
+   * Starts a new {@link Span} and calls the given function passing it the
+   * created span as first argument.
+   * Additionally the new span gets set in context and this context is activated
+   * for the duration of the function call.
+   *
+   * @param name The name of the span
+   * @param [options] SpanOptions used for span creation
+   * @param [context] Context to use to extract parent
+   * @param fn function called in the context of the span and receives the newly created span as an argument
+   * @returns return value of fn
+   * @example
+   *     const something = tracer.startActiveSpan('op', span => {
+   *       try {
+   *         do some work
+   *         span.setStatus({code: SpanStatusCode.OK});
+   *         return something;
+   *       } catch (err) {
+   *         span.setStatus({
+   *           code: SpanStatusCode.ERROR,
+   *           message: err.message,
+   *         });
+   *         throw err;
+   *       } finally {
+   *         span.end();
+   *       }
+   *     });
+   *
+   * @example
+   *     const span = tracer.startActiveSpan('op', span => {
+   *       try {
+   *         do some work
+   *         return span;
+   *       } catch (err) {
+   *         span.setStatus({
+   *           code: SpanStatusCode.ERROR,
+   *           message: err.message,
+   *         });
+   *         throw err;
+   *       }
+   *     });
+   *     do some more work
+   *     span.end();
+   */
+  startActiveSpan<F extends (span: Span) => unknown>(
+    name: string,
+    fn: F
+  ): ReturnType<F>;
+  startActiveSpan<F extends (span: Span) => unknown>(
+    name: string,
+    options: SpanOptions,
+    fn: F
+  ): ReturnType<F>;
+  startActiveSpan<F extends (span: Span) => unknown>(
+    name: string,
+    options: SpanOptions,
+    context: Context,
+    fn: F
+  ): ReturnType<F>;
+}
+
+/**
+ * Options needed for span creation
+ *
+ * @since 1.0.0
+ */
+export interface SpanOptions {
+  /**
+   * The SpanKind of a span
+   * @default {@link SpanKind.INTERNAL}
+   */
   kind?: SpanKind;
+
+  /** A span's attributes */
+  attributes?: Attributes;
+
+  /** {@link Link}s span to other spans */
   links?: Link[];
+
+  /** A manually specified start time for the created `Span` object. */
+  startTime?: TimeInput;
+
+  /** The new span should be a root span. (Ignore parent from context). */
   root?: boolean;
-};
+}
 
 export const enum SpanKind {
   /**
@@ -217,3 +327,24 @@ export type StartSpanResponse = {
   isRecording: boolean;
   context: SpanContext;
 };
+
+/**
+ * A registry for creating named {@link Tracer}s.
+ *
+ * @since 1.0.0
+ */
+export interface TracerProvider {
+  /**
+   * Returns a Tracer, creating one if one with the given name and version is
+   * not already created.
+   *
+   * This function may return different Tracer types (e.g.
+   * {@link NoopTracerProvider} vs. a functional tracer).
+   *
+   * @param name The name of the tracer or instrumentation library.
+   * @param version The version of the tracer or instrumentation library.
+   * @param options The options of the tracer or instrumentation library.
+   * @returns Tracer A Tracer with the given name and version
+   */
+  getTracer(name: string, version?: string, options?: TracerOptions): Tracer;
+}
