@@ -38,27 +38,25 @@ If no span is returned by the SDK, values are assumed for these properties.
    It likely also results in a peformance improvement as there are no longer multiple layers of indirection.
 4. API and SDK "shape" are no longer directly tied. SDK is free to store data in a more otlp-friendly way.
 
+### True Double-Emit ESM and CJS
+
+Makes use of typescript composite projects to emit standards-compliant ESM as well as CommonJS.
+
 ### Minification
 
-Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a `77%` improvement of `18.25KiB`.
+Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a `85%` improvement of `20.25KiB`.
 
 ```
-asset main.js 5.45 KiB [emitted] [minimized] (name: main)
-modules by path ./build/src/*.js 10 KiB
-  ./build/src/index.js 1.03 KiB [built] [code generated]
-  ./build/src/channel.js 771 bytes [built] [code generated]
-  ./build/src/context.js 1.17 KiB [built] [code generated]
-  ./build/src/diag.js 783 bytes [built] [code generated]
-  ./build/src/logs.js 1010 bytes [built] [code generated]
-  ./build/src/trace.js 5.3 KiB [built] [code generated]
-modules by path ./build/src/metrics/*.js 4.94 KiB
-  ./build/src/metrics/index.js 768 bytes [built] [code generated]
-  ./build/src/metrics/counter.js 926 bytes [built] [code generated]
-  ./build/src/metrics/gauge.js 923 bytes [built] [code generated]
-  ./build/src/metrics/histogram.js 947 bytes [built] [code generated]
-  ./build/src/metrics/observable_counter.js 842 bytes [built] [code generated]
-  ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
-webpack 5.99.9 compiled successfully in 187 ms
+asset index.js 3.45 KiB [emitted] [javascript module] [minimized] (name: main)
+orphan modules 12.2 KiB [orphan] 11 modules
+./build/esm/index.js + 11 modules 12.4 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 178 ms
+
+asset index.cjs 3.83 KiB [emitted] [minimized] (name: main)
+orphan modules 12.2 KiB [orphan] 11 modules
+runtime modules 670 bytes 3 modules
+./build/esm/index.js + 11 modules 12.4 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 163 ms
 ```
 
 **Old API Webpack**

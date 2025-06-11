@@ -1,4 +1,5 @@
-import { subscribe } from "api-2/channel";
+// import from root or from a specific API module
+import { subscribe } from "api-2";
 import { getLogger } from "api-2/logs";
 import { getMeter } from "api-2/metrics";
 import { getTracer } from "api-2/trace";
