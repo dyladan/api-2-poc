@@ -2,11 +2,13 @@
 // It provides a way to create channels and subscribe to them
 
 class ActiveChannel {
-  _subscribers!: ChannelListener[];
-  name!: string;
+  // subscribers
+  s!: ChannelListener[];
+  // name
+  n!: string;
 
   subscribe(subscription: ChannelListener) {
-    this._subscribers.push(subscription);
+    this.s.push(subscription);
   }
 
   get hasSubscribers() {
@@ -14,24 +16,26 @@ class ActiveChannel {
   }
 
   publish(data: any) {
-    for (let i = 0; i < this._subscribers.length; i++) {
-      this._subscribers[i](data, this.name);
+    for (let i = 0; i < this.s.length; i++) {
+      this.s[i](data, this.n);
     }
   }
 }
 
 class Channel {
-  _subscribers?: ChannelListener[];
-  name: string;
+  // subscribers
+  s?: ChannelListener[];
+  // name
+  n: string;
 
   constructor(name: string) {
-    this._subscribers = undefined;
-    this.name = name;
+    this.s = undefined;
+    this.n = name;
   }
 
   subscribe(subscription: ChannelListener) {
     Object.setPrototypeOf(this, ActiveChannel.prototype);
-    this._subscribers = [subscription];
+    this.s = [subscription];
   }
 
   get hasSubscribers() {

@@ -9,19 +9,20 @@ export type Logger = {
   isEnabled: () => boolean;
 };
 
-export function getLogger(loggerOptions: LoggerOptions): Logger {
+export function getLogger(logger: LoggerOptions): Logger {
   return {
-    emitEvent(event: EmitEventOptions): void { 
+    emitEvent(event: EmitEventOptions): void {
       if (!emitEventChannel.hasSubscribers) return;
       emitEventChannel.publish({
-        event: event,
-        logger: loggerOptions,
+        event,
+        logger,
       });
     },
     isEnabled(): boolean {
-      if (!isEnabledChannel.hasSubscribers) return emitEventChannel.hasSubscribers;
+      if (!isEnabledChannel.hasSubscribers)
+        return emitEventChannel.hasSubscribers;
       const event = {
-        logger: loggerOptions,
+        logger,
         // assumed enabled if there is a subscriber to the emitEvent channel
         isEnabled: emitEventChannel.hasSubscribers,
       };

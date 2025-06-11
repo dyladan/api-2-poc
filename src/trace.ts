@@ -1,8 +1,9 @@
 import { channel } from "./channels";
 import type { Attributes, AttributeValue } from "./types";
 
-const tracePrefix = "@opentelemetry/api/trace:";
-const propagationPrefix = "@opentelemetry/api/propagation:";
+const packageNamePrefix = "@opentelemetry/api/";
+const tracePrefix = `${packageNamePrefix}trace:`;
+const propagationPrefix = `${packageNamePrefix}propagation:`;
 const startSpanChannel = channel(`${tracePrefix}startSpan`),
   endSpanChannel = channel(`${tracePrefix}endSpan`),
   addAttributeChannel = channel(`${tracePrefix}addAttribute`),
