@@ -4,10 +4,14 @@ const channelsSymbol = Symbol.for("@opentelemetry/api:channels");
 (globalThis as any)[channelsSymbol] = (globalThis as any)[channelsSymbol] || {};
 const channels: Record<string, Channel> = (globalThis as any)[channelsSymbol];
 
+const nop = () => {};
+
 export function channel(name: string): Channel {
   channels[name] = channels[name] || {
-    publish: () => {},
-    hasSubscribers: false,
+    publish: nop,
+    get hasSubscribers() {
+      return this.publish !== nop;
+    },
   };
   return channels[name];
 }
@@ -15,9 +19,7 @@ export function channel(name: string): Channel {
 export type ChannelListener = (message: unknown) => void;
 
 export function subscribe(name: string, onMessage: ChannelListener): void {
-  const c = channel(name);
-  c.publish = onMessage;
-  c.hasSubscribers = true;
+  channel(name).publish = onMessage;
 }
 
 export type Channel = {
