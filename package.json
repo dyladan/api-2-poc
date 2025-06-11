@@ -6,9 +6,41 @@
   "types": "build/types/index.d.ts",
   "type": "module",
   "exports": {
-    "types": "./build/types/index.d.ts",
-    "import": "./build/esm/index.js",
-    "require": "./build/cjs/index.js"
+    ".": {
+      "types": "./build/types/index.d.ts",
+      "import": "./build/esm/index.js",
+      "require": "./build/cjs/index.js"
+    },
+    "./channel": {
+      "types": "./build/types/channel.d.ts",
+      "import": "./build/esm/channel.js",
+      "require": "./build/cjs/channel.js"
+    },
+    "./context": {
+      "types": "./build/types/context.d.ts",
+      "import": "./build/esm/context.js",
+      "require": "./build/cjs/context.js"
+    },
+    "./diag": {
+      "types": "./build/types/diag.d.ts",
+      "import": "./build/esm/diag.js",
+      "require": "./build/cjs/diag.js"
+    },
+    "./logs": {
+      "types": "./build/types/logs.d.ts",
+      "import": "./build/esm/logs.js",
+      "require": "./build/cjs/logs.js"
+    },
+    "./metrics": {
+      "types": "./build/types/metrics/index.d.ts",
+      "import": "./build/esm/metrics/index.js",
+      "require": "./build/cjs/metrics/index.js"
+    },
+    "./trace": {
+      "types": "./build/types/trace.d.ts",
+      "import": "./build/esm/trace.js",
+      "require": "./build/cjs/trace.js"
+    }
   },
   "files": [
     "build/**/*.js",

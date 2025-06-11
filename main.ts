@@ -1,9 +1,12 @@
-import { subscribe, getLogger, getMeter, getTracer } from "api-2";
+import { subscribe } from "api-2/channel";
+import { getLogger } from "api-2/logs";
+import { getMeter } from "api-2/metrics";
+import { getTracer } from "api-2/trace";
 subscribe("diag", console.log);
 
 // Uncomment the following line to start the SDK
-// import { startSDK } from "./sdk";
-// startSDK();
+import { startSDK } from "./sdk";
+startSDK();
 
 const opts = {
   version: "1.0.0",
