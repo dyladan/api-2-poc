@@ -41,39 +41,36 @@ export function getTracer(tracerOptions: TracerOptions): Tracer {
       const eventObj: any = { span, tracer };
 
       return {
-        end: function (endTime?: number): void {
+        end(endTime?: number): void {
           if (!endSpanChannel.hasSubscribers) return;
           eventObj.endTime = endTime;
           endSpanChannel.publish(eventObj);
         },
-        addAttribute: function (
-          key: string,
-          value: AttributeValue
-        ): void {
+        addAttribute(key: string, value: AttributeValue): void {
           if (!addAttributeChannel.hasSubscribers) return;
           eventObj.key = key;
           eventObj.value = value;
           addAttributeChannel.publish(eventObj);
         },
-        setStatus: function (status: SpanStatus): void {
+        setStatus(status: SpanStatus): void {
           if (!setStatusChannel.hasSubscribers) return;
           eventObj.status = status;
           setStatusChannel.publish(eventObj);
         },
-        addEvent: function (event: SpanEvent): void {
+        addEvent(event: SpanEvent): void {
           if (!addEventChannel.hasSubscribers) return;
           eventObj.event = event;
           addEventChannel.publish(eventObj);
         },
-        addLink: function (link: Link): void {
+        addLink(link: Link): void {
           if (!addLinkChannel.hasSubscribers) return;
           eventObj.link = link;
           addLinkChannel.publish(eventObj);
         },
-        isRecording: function (): boolean {
+        isRecording(): boolean {
           return span.isRecording;
         },
-        getContext: function (): SpanContext {
+        getContext(): SpanContext {
           return span.context;
         },
       };

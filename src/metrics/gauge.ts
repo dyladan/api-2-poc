@@ -12,7 +12,7 @@ export function createGauge(
   const instrument = createInstrument("gauge", meter, options);
   if (!instrument) {
     return {
-      record: () => {
+      record() {
         // No-op if instrument creation failed
       },
     };

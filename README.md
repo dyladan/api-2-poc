@@ -41,25 +41,25 @@ This comes at the cost of additional complexity in the implementation.
 
 ### Minification
 
-Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `17.67KiB` (`74.56%`).
+Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `17.77KiB` (`74.98%`).
 
 ```
-asset main.js 6.03 KiB [emitted] [minimized] (name: main)
-modules by path ./build/src/metrics/*.js 5.06 KiB
+asset main.js 5.93 KiB [emitted] [minimized] (name: main)
+modules by path ./build/src/metrics/*.js 5.03 KiB
   ./build/src/metrics/index.js 768 bytes [built] [code generated]
-  ./build/src/metrics/counter.js 953 bytes [built] [code generated]
-  ./build/src/metrics/gauge.js 950 bytes [built] [code generated]
-  ./build/src/metrics/histogram.js 974 bytes [built] [code generated]
-  ./build/src/metrics/observable_counter.js 880 bytes [built] [code generated]
+  ./build/src/metrics/counter.js 948 bytes [built] [code generated]
+  ./build/src/metrics/gauge.js 945 bytes [built] [code generated]
+  ./build/src/metrics/histogram.js 969 bytes [built] [code generated]
+  ./build/src/metrics/observable_counter.js 864 bytes [built] [code generated]
   ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
-modules by path ./build/src/*.js 9.54 KiB
-  ./build/src/index.js 1.03 KiB [built] [code generated]
-  ./build/src/context.js 1.23 KiB [built] [code generated]
+modules by path ./build/src/*.js 9.44 KiB
+  ./build/src/index.js 1.07 KiB [built] [code generated]
+  ./build/src/context.js 1.17 KiB [built] [code generated]
   ./build/src/diag.js 805 bytes [built] [code generated]
-  ./build/src/logs.js 1.08 KiB [built] [code generated]
-  ./build/src/trace.js 5.42 KiB [built] [code generated]
+  ./build/src/logs.js 1.07 KiB [built] [code generated]
+  ./build/src/trace.js 5.35 KiB [built] [code generated]
 ./build/src/channels/browser.js 1.46 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 190 ms
+webpack 5.99.9 compiled successfully in 169 ms
 ```
 
 **Old API Webpack**

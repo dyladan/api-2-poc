@@ -19,11 +19,11 @@ export function createObservableCounter(
   if (!instrument) {
     return {
       // invalid instruments never call their callbacks
-      registerCallback: () => {},
+      registerCallback() {},
     };
   }
   return {
-    registerCallback: function (callback: ObservableCounterCallback): void {
+    registerCallback(callback: ObservableCounterCallback): void {
       ch.publish({
         callback,
         instrument,

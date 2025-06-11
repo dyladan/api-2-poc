@@ -18,7 +18,7 @@ export function createCounter(
 
   if (!instrument) {
     return {
-      add: () => {
+      add() {
         // No-op if instrument creation failed
       },
     };

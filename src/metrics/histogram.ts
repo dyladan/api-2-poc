@@ -17,7 +17,7 @@ export function createHistogram(
   const instrument = createInstrument("histogram", meter, options);
   if (!instrument) {
     return {
-      record: () => {
+      record() {
         // No-op if instrument creation failed
       },
     };

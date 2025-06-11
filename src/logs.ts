@@ -18,7 +18,7 @@ export function getLogger(loggerOptions: LoggerOptions): Logger {
         logger: loggerOptions,
       });
     },
-    isEnabled: () => {
+    isEnabled(): boolean {
       if (!isEnabledChannel.hasSubscribers) return emitEventChannel.hasSubscribers;
       const event = {
         logger: loggerOptions,

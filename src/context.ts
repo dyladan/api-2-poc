@@ -41,11 +41,10 @@ export function createContextKey(description: string) {
 
 function Context(ctx: Map<symbol, unknown> = new Map()): Context {
   return {
-    getValue: (key: symbol) => ctx.get(key),
-    setValue: (key: symbol, value: unknown): Context => {
-      return Context(new Map(ctx).set(key, value));
-    },
-    deleteValue: (key: symbol): Context => {
+    getValue: (key: symbol): unknown => ctx.get(key),
+    setValue: (key: symbol, value: unknown): Context =>
+      Context(new Map(ctx).set(key, value)),
+    deleteValue(key: symbol): Context {
       const newCtx = new Map(ctx);
       newCtx.delete(key);
       return Context(newCtx);
