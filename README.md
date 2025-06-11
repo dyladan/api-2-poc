@@ -48,8 +48,9 @@ This also yields minification improvements below.
 Loading the entire API as a single minified and bundled file significantly reduces the impact on application start time.
 CJS and ESM bundles both included in the NPM package.
 
-### Minification
+### Minification-friendliness
 
+Several of the improvements above such as no classes, no `this`, and no namespacing mean this version minifies significantly more efficiently than the current production API.
 Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a `85%` improvement of `20.25KiB`.
 
 ```
