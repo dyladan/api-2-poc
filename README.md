@@ -41,6 +41,12 @@ If no span is returned by the SDK, values are assumed for these properties.
 ### True Double-Emit ESM and CJS
 
 Makes use of typescript composite projects to emit standards-compliant ESM as well as CommonJS.
+This also yields minification improvements below.
+
+### Webpack Bundling
+
+Loading the entire API as a single minified and bundled file significantly reduces the impact on application start time.
+CJS and ESM bundles both included in the NPM package.
 
 ### Minification
 

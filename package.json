@@ -1,14 +1,14 @@
 {
   "name": "api-2",
   "version": "1.0.0",
-  "main": "build/cjs/index.js",
-  "module": "build/esm/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "build/esm/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
       "types": "./build/esm/index.d.ts",
-      "import": "./build/esm/index.js",
+      "import": "./dist/index.js",
       "require": "./build/esm/index.cjs"
     },
     "./channel": {
@@ -44,6 +44,7 @@
   },
   "files": [
     "build/**/*",
+    "dist/**/*",
     "!build/*.tsbuildinfo"
   ],
   "scripts": {

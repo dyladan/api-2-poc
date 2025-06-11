@@ -1,6 +1,7 @@
 [
   {
     "mode": "production",
+    "devtool": "source-map",
     "entry": "./build/esm/index.js",
     "output": {
       "filename": "index.js",
@@ -14,6 +15,7 @@
   },
   {
     "mode": "production",
+    "devtool": "source-map",
     "entry": "./build/esm/index.js",
     "output": {
       "filename": "index.cjs",
