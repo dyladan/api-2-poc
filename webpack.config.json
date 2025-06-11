@@ -1,0 +1,23 @@
+[
+  {
+    "mode": "production",
+    "entry": "./build/esm/index.js",
+    "output": {
+      "library": {
+        "type": "module"
+      }
+    },
+    "experiments": {
+      "outputModule": true
+    }
+  },
+  {
+    "mode": "production",
+    "entry": "./build/esm/index.js",
+    "output": {
+      "library": {
+        "type": "commonjs2"
+      }
+    }
+  }
+]

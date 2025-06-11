@@ -1,4 +1,4 @@
-import { Attributes } from "../types";
+import type { Attributes } from "../types.ts";
 
 export type Meter = {
   createCounter: (options: InstrumentOptions) => Counter;

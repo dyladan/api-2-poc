@@ -1,54 +1,35 @@
 {
   "name": "api-2",
   "version": "1.0.0",
-  "main": "build/src/index.js",
-  "browser": {
-    "./build/src/channels/index.js": "./build/src/channels/browser.js"
-  },
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "types": "build/types/index.d.ts",
+  "type": "module",
   "exports": {
-    ".": {
-      "import": "./build/src/index.js",
-      "require": "./build/src/index.js"
-    },
-    "./channels": {
-      "import": "./build/src/channels/index.js",
-      "require": "./build/src/channels/index.js"
-    },
-    "./trace": {
-      "import": "./build/src/trace.js",
-      "require": "./build/src/trace.js"
-    },
-    "./metrics": {
-      "import": "./build/src/metrics/index.js",
-      "require": "./build/src/metrics/index.js"
-    },
-    "./logs": {
-      "import": "./build/src/logs.js",
-      "require": "./build/src/logs.js"
-    },
-    "./diag": {
-      "import": "./build/src/diag.js",
-      "require": "./build/src/diag.js"
-    }
+    "types": "./build/types/index.d.ts",
+    "import": "./build/esm/index.js",
+    "require": "./build/cjs/index.js"
   },
   "files": [
-    "build/src/**/*.js",
-    "build/src/**/*.js.map",
-    "build/src/**/*.d.ts",
-    "build/src/**/*.d.ts.map"
+    "build/**/*.js",
+    "build/**/*.js.map",
+    "build/**/*.d.ts",
+    "build/**/*.d.ts.map"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --build tsconfig.types.json tsconfig.esm.json tsconfig.cjs.json",
+    "postbuild": "echo '{\"type\":\"commonjs\"}' > build/cjs/package.json",
     "clean": "rm -rf build",
     "prebuild": "npm run clean",
     "prepack": "npm run build",
     "check": "tsc --noEmit",
-    "start": "ts-node main.ts",
-    "bundle": "webpack --config webpack.config.js"
+    "start": "tsx main.ts",
+    "bundle": "webpack --config webpack.config.json"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.1",
     "typescript": "^5.8.3",
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1"

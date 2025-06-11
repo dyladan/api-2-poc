@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build/cjs",
+    "rootDir": "src",
+    "module": "commonjs",
+    "moduleResolution": "node10",
+    "target": "es2017",
+    "lib": [
+      "es2017",
+      "dom",
+      "dom.iterable"
+    ]
+  },
+}

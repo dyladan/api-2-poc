@@ -1,12 +1,12 @@
-import { channel } from "../channel";
-import type { Attributes } from "../types";
-import { createInstrument } from "./instrument";
+import { channel } from "../channel.js";
+import type { Attributes } from "../types.ts";
+import { createInstrument } from "./instrument.js";
 import type {
   Counter,
   GaugeRecordEvent,
   InstrumentOptions,
   MeterOptions,
-} from "./types";
+} from "./types.ts";
 
 const ch = channel("metrics:counter:add");
 

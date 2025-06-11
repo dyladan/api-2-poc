@@ -1,5 +1,5 @@
-import { channel } from "./channel";
-import type { Attributes } from "./types";
+import { channel } from "./channel.js";
+import type { Attributes } from "./types.ts";
 
 const emitEventChannel = channel("logs:emitEvent");
 const isEnabledChannel = channel("logs:isEnabled");

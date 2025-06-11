@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "build",
-    "rootDir": ".",
+    "outDir": "build/esm",
+    "rootDir": "src",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "composite": true,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "inlineSources": true,
     "isolatedModules": true,
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "es6",
+    "moduleResolution": "node",
     "esModuleInterop": false,
     "newLine": "LF",
     "noEmitOnError": true,
@@ -38,5 +38,8 @@
     "build",
     "sdk.ts",
     "main.ts"
+  ],
+  "include": [
+    "src/**/*.ts"
   ]
 }

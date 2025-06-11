@@ -1,13 +1,9 @@
-import { subscribe } from "./src/channel";
+import { subscribe, getLogger, getMeter, getTracer } from "api-2";
 subscribe("diag", console.log);
 
-import { getLogger } from "./src/logs";
-import { getMeter } from "./src/metrics";
-import { getTracer } from "./src/trace";
-
 // Uncomment the following line to start the SDK
-import { startSDK } from "./sdk";
-startSDK();
+// import { startSDK } from "./sdk";
+// startSDK();
 
 const opts = {
   version: "1.0.0",
@@ -69,8 +65,8 @@ const events = meter.createCounter({
 });
 
 const badCounter = meter.createCounter({
-  // counter without name to test error handling
-  name: undefined as any,
+  // @ts-expect-error counter without name to test error handling
+  name: undefined,
   description: "Count of requests",
   unit: "requests",
   attributes: {

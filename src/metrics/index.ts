@@ -1,8 +1,8 @@
-import { createCounter } from "./counter";
-import { createGauge } from "./gauge";
-import { createHistogram } from "./histogram";
-import { createObservableCounter } from "./observable_counter";
-import type { Meter, MeterOptions } from "./types";
+import { createCounter } from "./counter.js";
+import { createGauge } from "./gauge.js";
+import { createHistogram } from "./histogram.js";
+import { createObservableCounter } from "./observable_counter.js";
+import type { Meter, MeterOptions } from "./types.ts";
 
 export type {
   Counter,
@@ -19,7 +19,7 @@ export type {
   ObservableCounter,
   ObservableCounterCallback,
   RecordValueCallback,
-} from "./types";
+} from "./types.ts";
 
 export function getMeter(meterOptions: MeterOptions): Meter {
   const memoizeMetricFn =

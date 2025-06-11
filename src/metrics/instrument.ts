@@ -1,5 +1,5 @@
-import { error } from "../diag";
-import { InstrumentDescriptor, InstrumentOptions, MeterOptions } from "./types";
+import { error } from "../diag.js";
+import type { InstrumentDescriptor, InstrumentOptions, MeterOptions } from "./types.ts";
 
 export function createInstrument<T extends string>(
   type: T,

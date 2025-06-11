@@ -1,5 +1,5 @@
-import { channel } from "./channel";
-import type { Attributes, AttributeValue } from "./types";
+import { channel } from "./channel.js";
+import type { Attributes, AttributeValue } from "./types.ts";
 
 const tracePrefix = "trace:";
 const propagationPrefix = "propagation:";

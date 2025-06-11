@@ -1,4 +1,4 @@
-import { channel } from "./channel";
+import { channel } from "./channel.js";
 
 const ch = channel("diag");
 

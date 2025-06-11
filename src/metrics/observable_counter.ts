@@ -1,11 +1,11 @@
-import { channel } from "../channel";
-import { createInstrument } from "./instrument";
+import { channel } from "../channel.js";
+import { createInstrument } from "./instrument.js";
 import type {
   ObservableCounter,
   InstrumentOptions,
   MeterOptions,
   ObservableCounterCallback,
-} from "./types";
+} from "./types.ts";
 
 const ch = channel("metrics:observable_counter:register_callback");
 

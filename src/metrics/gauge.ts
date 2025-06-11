@@ -1,7 +1,7 @@
-import { channel } from "../channel";
-import type { Attributes } from "../types";
-import { createInstrument } from "./instrument";
-import type { Gauge, GaugeRecordEvent, InstrumentOptions, MeterOptions } from "./types";
+import { channel } from "../channel.js";
+import type { Attributes } from "../types.ts";
+import { createInstrument } from "./instrument.js";
+import type { Gauge, GaugeRecordEvent, InstrumentOptions, MeterOptions } from "./types.ts";
 
 const ch = channel("metrics:gauge:record");
 
