@@ -34,13 +34,13 @@ If no span is returned by the SDK, values are assumed for these properties.
 
 ### Minification
 
-Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `18.06KiB` (`76.2%`).
+Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `18.1KiB` (`76.4%`).
 
 ```
-asset main.js 5.64 KiB [emitted] [minimized] (name: main)
-modules by path ./build/src/*.js 10.2 KiB
+asset main.js 5.6 KiB [compared for emit] [minimized] (name: main)
+modules by path ./build/src/*.js 10.1 KiB
   ./build/src/index.js 1.03 KiB [built] [code generated]
-  ./build/src/channel.js 827 bytes [built] [code generated]
+  ./build/src/channel.js 748 bytes [built] [code generated]
   ./build/src/context.js 1.17 KiB [built] [code generated]
   ./build/src/diag.js 802 bytes [built] [code generated]
   ./build/src/logs.js 1.02 KiB [built] [code generated]
@@ -52,7 +52,6 @@ modules by path ./build/src/metrics/*.js 5.02 KiB
   ./build/src/metrics/histogram.js 966 bytes [built] [code generated]
   ./build/src/metrics/observable_counter.js 861 bytes [built] [code generated]
   ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
-webpack 5.99.9 compiled successfully in 193 ms
 ```
 
 **Old API Webpack**
