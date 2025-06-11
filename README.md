@@ -1,5 +1,11 @@
 # API V2 Proof of Concept
 
+> [!IMPORTANT]  
+> This is a proof of concept only.
+> It should not be considered official in any capacity.
+> It is not meant to be a complete implementation, but to show what is achievable if we leave certain assumptions behind.
+> It is not backwards compatible with the existing API or SDK.
+
 This is an incomplete implementation of the OTel API using event-based communication with the SDK.
 
 ## No-op API without SDK
