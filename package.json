@@ -3,41 +3,41 @@
   "version": "1.0.0",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
-  "types": "build/types/index.d.ts",
+  "types": "build/esm/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "types": "./build/types/index.d.ts",
+      "types": "./build/esm/index.d.ts",
       "import": "./build/esm/index.js",
       "require": "./build/esm/index.cjs"
     },
     "./channel": {
-      "types": "./build/types/channel.d.ts",
+      "types": "./build/esm/channel.d.ts",
       "import": "./build/esm/channel.js",
       "require": "./build/cjs/channel.js"
     },
     "./context": {
-      "types": "./build/types/context.d.ts",
+      "types": "./build/esm/context.d.ts",
       "import": "./build/esm/context.js",
       "require": "./build/cjs/context.js"
     },
     "./diag": {
-      "types": "./build/types/diag.d.ts",
+      "types": "./build/esm/diag.d.ts",
       "import": "./build/esm/diag.js",
       "require": "./build/cjs/diag.js"
     },
     "./logs": {
-      "types": "./build/types/logs.d.ts",
+      "types": "./build/esm/logs.d.ts",
       "import": "./build/esm/logs.js",
       "require": "./build/cjs/logs.js"
     },
     "./metrics": {
-      "types": "./build/types/metrics/index.d.ts",
+      "types": "./build/esm/metrics/index.d.ts",
       "import": "./build/esm/metrics/index.js",
       "require": "./build/cjs/metrics/index.js"
     },
     "./trace": {
-      "types": "./build/types/trace.d.ts",
+      "types": "./build/esm/trace.d.ts",
       "import": "./build/esm/trace.js",
       "require": "./build/cjs/trace.js"
     }
@@ -47,7 +47,7 @@
     "!build/*.tsbuildinfo"
   ],
   "scripts": {
-    "build": "tsc --build tsconfig.types.json tsconfig.esm.json tsconfig.cjs.json",
+    "build": "tsc --build tsconfig.esm.json tsconfig.cjs.json",
     "watch": "npm run build --ignore-scripts -- --noEmit --watch",
     "postbuild": "node -e \"require('fs').writeFileSync('build/cjs/package.json', JSON.stringify({type: 'commonjs'}))\"",
     "clean": "rimraf build dist",
