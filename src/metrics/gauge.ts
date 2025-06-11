@@ -1,4 +1,4 @@
-import { channel } from "../channels";
+import { channel } from "../channel";
 import type { Attributes } from "../types";
 import { createInstrument } from "./instrument";
 import type { Gauge, GaugeRecordEvent, InstrumentOptions, MeterOptions } from "./types";

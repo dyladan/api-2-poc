@@ -1,4 +1,4 @@
-export * from "./channels";
+export * from "./channel";
 export * from "./context";
 export * from "./diag";
 export * from "./logs";

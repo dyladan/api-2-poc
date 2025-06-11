@@ -1,4 +1,4 @@
-import { channel } from "./channels";
+import { channel } from "./channel";
 import type { Attributes, AttributeValue } from "./types";
 
 const packageNamePrefix = "@opentelemetry/api/";

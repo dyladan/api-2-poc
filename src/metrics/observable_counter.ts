@@ -1,4 +1,4 @@
-import { channel } from "../channels";
+import { channel } from "../channel";
 import { createInstrument } from "./instrument";
 import type {
   ObservableCounter,

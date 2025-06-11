@@ -1,4 +1,4 @@
-import { subscribe } from "./src/channels";
+import { subscribe } from "./src/channel";
 subscribe("@opentelemetry/api/diag", console.log);
 
 import { getLogger } from "./src/logs";

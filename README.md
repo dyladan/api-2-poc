@@ -1,13 +1,12 @@
 # API V2 Proof of Concept
 
-This is an incomplete implementation of the OTel API using diagnostics channels as the communication method with the SDK.
-It works by emitting events on channels when any API method is called.
+This is an incomplete implementation of the OTel API using event-based communication with the SDK.
 
 ## No-op API without SDK
 
 The API is fully self-contained.
 Any objects received by the user come from the API only and not from the SDK.
-When the user takes action on these objects, they emit events on diagnostics channels.
+When the user takes action on these objects, they emit events on a channel.
 If there is no SDK, the events themselves have no effect.
 
 Some methods, which require a response from the SDK, must mock those responses if none is received; See 2-way communication below.
@@ -24,12 +23,6 @@ Because channel subscribers are run synchronously, the SDK can modify the event 
 For example, when a span is started the SDK should modify the event to communicate information about the created span back to the API such as `isRecording` and the `SpanContext`.
 If no span is returned by the SDK, values are assumed for these properties.
 
-## Browser support
-
-In `src/channels` there is a polyfill implementation of diagnostics channels for browser.
-The polyfill changes the prototype of the channel when a subscriber is added in order to avoid `if-then` branches on the hot path when publishing events.
-This comes at the cost of additional complexity in the implementation.
-
 ## Advantages
 
 1. Code size is drastically reduced. There are no more `NOOP_*` classes or constants, no more namespacing (everything is simple functions), and no more use of `this` anywhere in the API.
@@ -41,25 +34,25 @@ This comes at the cost of additional complexity in the implementation.
 
 ### Minification
 
-Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `17.87KiB` (`75.4%`).
+Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `18.06KiB` (`76.2%`).
 
 ```
-asset main.js 5.83 KiB [compared for emit] [minimized] (name: main)
-modules by path ./build/src/metrics/*.js 5.03 KiB
-  ./build/src/metrics/index.js 768 bytes [built] [code generated]
-  ./build/src/metrics/counter.js 948 bytes [built] [code generated]
-  ./build/src/metrics/gauge.js 945 bytes [built] [code generated]
-  ./build/src/metrics/histogram.js 969 bytes [built] [code generated]
-  ./build/src/metrics/observable_counter.js 864 bytes [built] [code generated]
-  ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
-modules by path ./build/src/*.js 9.41 KiB
+asset main.js 5.64 KiB [emitted] [minimized] (name: main)
+modules by path ./build/src/*.js 10.2 KiB
   ./build/src/index.js 1.03 KiB [built] [code generated]
+  ./build/src/channel.js 827 bytes [built] [code generated]
   ./build/src/context.js 1.17 KiB [built] [code generated]
-  ./build/src/diag.js 805 bytes [built] [code generated]
-  ./build/src/logs.js 1.03 KiB [built] [code generated]
-  ./build/src/trace.js 5.4 KiB [built] [code generated]
-./build/src/channels/browser.js 1.44 KiB [built] [code generated]
-webpack 5.99.9 compiled successfully in 164 ms
+  ./build/src/diag.js 802 bytes [built] [code generated]
+  ./build/src/logs.js 1.02 KiB [built] [code generated]
+  ./build/src/trace.js 5.39 KiB [built] [code generated]
+modules by path ./build/src/metrics/*.js 5.02 KiB
+  ./build/src/metrics/index.js 768 bytes [built] [code generated]
+  ./build/src/metrics/counter.js 945 bytes [built] [code generated]
+  ./build/src/metrics/gauge.js 942 bytes [built] [code generated]
+  ./build/src/metrics/histogram.js 966 bytes [built] [code generated]
+  ./build/src/metrics/observable_counter.js 861 bytes [built] [code generated]
+  ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
+webpack 5.99.9 compiled successfully in 193 ms
 ```
 
 **Old API Webpack**

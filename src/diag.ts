@@ -1,4 +1,4 @@
-import { channel } from "./channels";
+import { channel } from "./channel";
 
 const ch = channel("@opentelemetry/api/diag");
 

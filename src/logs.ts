@@ -1,4 +1,4 @@
-import { channel } from "./channels";
+import { channel } from "./channel";
 import type { Attributes } from "./types";
 
 const emitEventChannel = channel("@opentelemetry/api/logs:emitEvent");
