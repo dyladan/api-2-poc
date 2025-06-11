@@ -2,14 +2,14 @@
   "name": "api-2",
   "version": "1.0.0",
   "main": "build/cjs/index.js",
-  "module": "dist/index.js",
+  "module": "build/esm/index.js",
   "types": "build/types/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
       "types": "./build/types/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./build/esm/index.js",
+      "require": "./build/esm/index.cjs"
     },
     "./channel": {
       "types": "./build/types/channel.d.ts",
@@ -43,23 +43,25 @@
     }
   },
   "files": [
-    "build/**/*.js",
-    "build/**/*.js.map",
-    "build/**/*.d.ts",
-    "build/**/*.d.ts.map"
+    "build/**/*",
+    "!build/*.tsbuildinfo"
   ],
   "scripts": {
     "build": "tsc --build tsconfig.types.json tsconfig.esm.json tsconfig.cjs.json",
-    "postbuild": "echo '{\"type\":\"commonjs\"}' > build/cjs/package.json",
-    "clean": "rm -rf build dist",
+    "watch": "npm run build --ignore-scripts -- --noEmit --watch",
+    "postbuild": "node -e \"require('fs').writeFileSync('build/cjs/package.json', JSON.stringify({type: 'commonjs'}))\"",
+    "clean": "rimraf build dist",
     "prebuild": "npm run clean",
-    "prepack": "npm run build",
-    "check": "tsc --noEmit",
+    "prepack": "npm run bundle",
+    "check": "npm run build --ignore-scripts -- --noEmit",
+    "prestart": "npm run build",
     "start": "tsx main.ts",
+    "prebundle": "npm run build",
     "bundle": "webpack --config webpack.config.json"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
+    "rimraf": "^6.0.1",
     "tsx": "^4.20.1",
     "typescript": "^5.8.3",
     "webpack": "^5.99.9",
