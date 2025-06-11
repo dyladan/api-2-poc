@@ -1,5 +1,5 @@
 import { subscribe } from "./src/channel";
-subscribe("@opentelemetry/api/diag", console.log);
+subscribe("diag", console.log);
 
 import { getLogger } from "./src/logs";
 import { getMeter } from "./src/metrics";

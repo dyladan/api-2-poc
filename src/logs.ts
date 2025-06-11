@@ -1,8 +1,8 @@
 import { channel } from "./channel";
 import type { Attributes } from "./types";
 
-const emitEventChannel = channel("@opentelemetry/api/logs:emitEvent");
-const isEnabledChannel = channel("@opentelemetry/api/logs:isEnabled");
+const emitEventChannel = channel("logs:emitEvent");
+const isEnabledChannel = channel("logs:isEnabled");
 
 export type Logger = {
   emitEvent: (options: EmitEventOptions) => void;

@@ -3,7 +3,7 @@ import type { Attributes } from "../types";
 import { createInstrument } from "./instrument";
 import type { Gauge, GaugeRecordEvent, InstrumentOptions, MeterOptions } from "./types";
 
-const ch = channel("@opentelemetry/api/metrics:gauge:record");
+const ch = channel("metrics:gauge:record");
 
 export function createGauge(
   meter: MeterOptions,

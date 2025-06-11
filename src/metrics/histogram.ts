@@ -8,7 +8,7 @@ import type {
   MeterOptions,
 } from "./types";
 
-const ch = channel("@opentelemetry/api/metrics:histogram:record");
+const ch = channel("metrics:histogram:record");
 
 export function createHistogram(
   meter: MeterOptions,

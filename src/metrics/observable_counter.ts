@@ -7,9 +7,7 @@ import type {
   ObservableCounterCallback,
 } from "./types";
 
-const ch = channel(
-  "@opentelemetry/api/metrics:observable_counter:register_callback"
-);
+const ch = channel("metrics:observable_counter:register_callback");
 
 export function createObservableCounter(
   meter: MeterOptions,

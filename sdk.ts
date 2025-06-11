@@ -10,11 +10,11 @@ export function startSDK() {
 }
 
 function startPropagationSDK() {
-  subscribe("@opentelemetry/api/propagation:inject", (event: any) => {
+  subscribe("propagation:inject", (event: any) => {
     event.carrier["trace-id"] = event.options.traceId;
     event.carrier["span-id"] = event.options.spanId;
   });
-  subscribe("@opentelemetry/api/propagation:extract", (event: any) => {
+  subscribe("propagation:extract", (event: any) => {
     event.options = {
       traceId: event.carrier["trace-id"],
       spanId: event.carrier["span-id"],
@@ -23,13 +23,13 @@ function startPropagationSDK() {
 }
 
 function startLogsSDK() {
-  subscribe("@opentelemetry/api/logs:emitEvent", (event: any) => {
+  subscribe("logs:emitEvent", (event: any) => {
     if (!isLogsEnabled) {
       return; // skip logging if logs are disabled
     }
     console.log(`[${event.event.level}] ${event.event.message} - ${JSON.stringify(event.event.attributes)}`);
   });
-  subscribe("@opentelemetry/api/logs:isEnabled", (event: any) => {
+  subscribe("logs:isEnabled", (event: any) => {
     event.isEnabled = isLogsEnabled;
   });
 }
@@ -41,7 +41,7 @@ function startMetricsSDK() {
   // real impl would store different metric streams for each set of attributes
   const meters = new WeakMap();
 
-  subscribe("@opentelemetry/api/metrics:counter:add", (event: any) => {
+  subscribe("metrics:counter:add", (event: any) => {
     console.log(
       `Counter "${event.meter.name}#${event.instrument.name}" incremented by ${event.value}`
     );
@@ -60,7 +60,7 @@ function startMetricsSDK() {
       }": ${meterMap.get(event.instrument)}`
     );
   });
-  subscribe("@opentelemetry/api/metrics:histogram:record", (event: any) => {
+  subscribe("metrics:histogram:record", (event: any) => {
     console.log(
       `Histogram "${event.meter.name}#${event.instrument.name}" recorded value ${event.value}`
     );
@@ -68,7 +68,7 @@ function startMetricsSDK() {
 }
 
 function startTracingSDK() {
-  subscribe("@opentelemetry/api/trace:startSpan", (event: any) => {
+  subscribe("trace:startSpan", (event: any) => {
     console.log(
       `Span "${event.tracer.name}#${event.options.name}" started with attributes:`,
       event.options.attributes
@@ -84,7 +84,7 @@ function startTracingSDK() {
       attributes: event.options.attributes || {},
     };
   });
-  subscribe("@opentelemetry/api/trace:endSpan", (event: any) => {
+  subscribe("trace:endSpan", (event: any) => {
     console.log(`Span "${event.tracer.name}#${event.span.name}" ended`);
   });
 }

@@ -8,7 +8,7 @@ import type {
   MeterOptions,
 } from "./types";
 
-const ch = channel(`@opentelemetry/api/metrics:counter:add`);
+const ch = channel("metrics:counter:add");
 
 export function createCounter(
   meter: MeterOptions,

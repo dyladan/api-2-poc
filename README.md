@@ -34,24 +34,25 @@ If no span is returned by the SDK, values are assumed for these properties.
 
 ### Minification
 
-Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `18.1KiB` (`76.4%`).
+Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a `77%` improvement of `18.26KiB`.
 
 ```
-asset main.js 5.6 KiB [compared for emit] [minimized] (name: main)
-modules by path ./build/src/*.js 10.1 KiB
+asset main.js 5.44 KiB [emitted] [minimized] (name: main)
+modules by path ./build/src/*.js 9.98 KiB
   ./build/src/index.js 1.03 KiB [built] [code generated]
   ./build/src/channel.js 748 bytes [built] [code generated]
   ./build/src/context.js 1.17 KiB [built] [code generated]
-  ./build/src/diag.js 802 bytes [built] [code generated]
-  ./build/src/logs.js 1.02 KiB [built] [code generated]
-  ./build/src/trace.js 5.39 KiB [built] [code generated]
-modules by path ./build/src/metrics/*.js 5.02 KiB
+  ./build/src/diag.js 783 bytes [built] [code generated]
+  ./build/src/logs.js 1010 bytes [built] [code generated]
+  ./build/src/trace.js 5.3 KiB [built] [code generated]
+modules by path ./build/src/metrics/*.js 4.94 KiB
   ./build/src/metrics/index.js 768 bytes [built] [code generated]
-  ./build/src/metrics/counter.js 945 bytes [built] [code generated]
-  ./build/src/metrics/gauge.js 942 bytes [built] [code generated]
-  ./build/src/metrics/histogram.js 966 bytes [built] [code generated]
-  ./build/src/metrics/observable_counter.js 861 bytes [built] [code generated]
+  ./build/src/metrics/counter.js 926 bytes [built] [code generated]
+  ./build/src/metrics/gauge.js 923 bytes [built] [code generated]
+  ./build/src/metrics/histogram.js 947 bytes [built] [code generated]
+  ./build/src/metrics/observable_counter.js 842 bytes [built] [code generated]
   ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
+webpack 5.99.9 compiled successfully in 179 ms
 ```
 
 **Old API Webpack**

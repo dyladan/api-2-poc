@@ -1,6 +1,6 @@
 import { channel } from "./channel";
 
-const ch = channel("@opentelemetry/api/diag");
+const ch = channel("diag");
 
 function publish(level: string, message: string, body?: any) {
   if (!ch.hasSubscribers) return;
