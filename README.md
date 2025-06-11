@@ -39,6 +39,47 @@ This comes at the cost of additional complexity in the implementation.
    It likely also results in a peformance improvement as there are no longer multiple layers of indirection.
 4. API and SDK "shape" are no longer directly tied. SDK is free to store data in a more otlp-friendly way.
 
+### Minification
+
+Note that this does not represent exactly the savings because this API is not yet fully implemented, but it still shows a drastic improvement of `17.67KiB` (`74.56%`).
+
+```
+asset main.js 6.03 KiB [emitted] [minimized] (name: main)
+modules by path ./build/src/metrics/*.js 5.06 KiB
+  ./build/src/metrics/index.js 768 bytes [built] [code generated]
+  ./build/src/metrics/counter.js 953 bytes [built] [code generated]
+  ./build/src/metrics/gauge.js 950 bytes [built] [code generated]
+  ./build/src/metrics/histogram.js 974 bytes [built] [code generated]
+  ./build/src/metrics/observable_counter.js 880 bytes [built] [code generated]
+  ./build/src/metrics/instrument.js 656 bytes [built] [code generated]
+modules by path ./build/src/*.js 9.54 KiB
+  ./build/src/index.js 1.03 KiB [built] [code generated]
+  ./build/src/context.js 1.23 KiB [built] [code generated]
+  ./build/src/diag.js 805 bytes [built] [code generated]
+  ./build/src/logs.js 1.08 KiB [built] [code generated]
+  ./build/src/trace.js 5.42 KiB [built] [code generated]
+./build/src/channels/browser.js 1.46 KiB [built] [code generated]
+webpack 5.99.9 compiled successfully in 190 ms
+```
+
+**Old API Webpack**
+
+```
+asset main.js 23.7 KiB [emitted] [minimized] (name: main)
+runtime modules 221 bytes 1 module
+modules by path ./build/src/trace/ 28.5 KiB 15 modules
+modules by path ./build/src/*.js 12.2 KiB 7 modules
+modules by path ./build/src/api/*.js 15.8 KiB 5 modules
+modules by path ./build/src/baggage/ 6.53 KiB 4 modules
+modules by path ./build/src/diag/ 7.92 KiB 4 modules
+modules by path ./build/src/metrics/*.js 6.84 KiB 3 modules
+modules by path ./build/src/context/*.js 3.45 KiB 2 modules
+modules by path ./build/src/propagation/*.js 2.43 KiB 2 modules
+modules by path ./build/src/internal/*.js 7.86 KiB 2 modules
+modules by path ./build/src/platform/browser/*.js 2.34 KiB 2 modules
+webpack 5.99.9 compiled successfully in 307 ms
+```
+
 ## Open Questions
 
 1. Is it more performant to do a `hasSubscribers` check before emitting an event, or simply to emit the event?
